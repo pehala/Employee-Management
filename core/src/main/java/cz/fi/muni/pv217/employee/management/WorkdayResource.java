@@ -4,6 +4,7 @@ import cz.fi.muni.pv217.employee.management.entity.Workday;
 import cz.fi.muni.pv217.employee.management.exception.VacationException;
 import cz.fi.muni.pv217.employee.management.service.WorkdayService;
 import io.quarkus.panache.common.Parameters;
+import org.eclipse.microprofile.metrics.annotation.Counted;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ public class WorkdayResource {
 
     @POST
     @Path("/create")
+    @Counted(name = "createdWorkdays", description = "How many workdays have been created.")
     public Workday createWorkday(Workday workday) throws VacationException {
         return workdayService.createWorkday(workday);
     }
@@ -59,6 +61,7 @@ public class WorkdayResource {
     }
 
     @GET
+    @Counted(name = "showWorkdays")
     public List<Workday> getWorkdays() {
         return Workday.listAll();
     }
