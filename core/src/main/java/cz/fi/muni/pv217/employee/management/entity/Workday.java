@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-public class DayWork extends PanacheEntity {
+public class Workday extends PanacheEntity {
     @NotNull(message = "Date cannot be null")
     @Column(columnDefinition = "DATE")
     public LocalDate date;
