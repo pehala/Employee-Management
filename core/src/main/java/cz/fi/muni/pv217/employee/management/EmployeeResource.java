@@ -3,6 +3,7 @@ package cz.fi.muni.pv217.employee.management;
 import cz.fi.muni.pv217.employee.management.entity.Employee;
 import cz.fi.muni.pv217.employee.management.service.EmployeeService;
 import io.quarkus.panache.common.Parameters;
+import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -13,7 +14,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 
-@Path("/employee")
+@Path("/api/employee")
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -22,23 +23,26 @@ public class EmployeeResource {
     @Inject
     EmployeeService employeeService;
 
+    @Inject
+    SecurityIdentity identity;
+
     @POST
     @Path("/create")
-    //@RolesAllowed("Admin")
+    @RolesAllowed("admin")
     public Employee createEmployee(Employee employee) {
         return employeeService.createEmployee(employee);
     }
 
     @PUT
     @Path("/{id}/update")
-    //@RolesAllowed("Admin")
+    @RolesAllowed("admin")
     public Employee updateEmployee(@org.jboss.resteasy.annotations.jaxrs.PathParam long id, Employee employee) {
         return employeeService.updateEmployee(id, employee);
     }
 
     @DELETE
     @Path("/{id}/delete")
-    //@RolesAllowed("Admin")
+    @RolesAllowed("admin")
     public Response deleteEmployee(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
         Employee employee;
 
@@ -61,12 +65,14 @@ public class EmployeeResource {
     }
 
     @GET
+    @RolesAllowed({"user","admin"})
     public List<Employee> getEmployees() {
         return Employee.listAll();
     }
 
     @GET
     @Path("/{id}")
+    @RolesAllowed("user")
     public Response getEmployee(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
         Employee employee = Employee.findById(id);
 
@@ -82,6 +88,7 @@ public class EmployeeResource {
 
     @GET
     @Path("/search")
+    @RolesAllowed("user")
     public List<Employee> searchEmployees(@QueryParam("search") String search) {
         return Employee.list("name like :search or surname like :search", Parameters.with("search", "%" + search + "%"));
     }

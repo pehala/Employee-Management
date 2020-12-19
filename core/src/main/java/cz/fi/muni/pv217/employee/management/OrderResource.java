@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/order")
+@Path("/api/order")
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -24,14 +24,14 @@ public class OrderResource {
     
     @POST
     @Path("/create")
-    //@RolesAllowed("Admin")
+    @RolesAllowed("admin")
     public Order createOrder(Order order) {
         return orderService.createOrder(order);
     }
 
     @PUT
     @Path("/{id}/update")
-    //@RolesAllowed("Admin")
+    @RolesAllowed("admin")
     public Order updateOrder(@org.jboss.resteasy.annotations.jaxrs.PathParam long id, JsonObject jsonObject) {
         try {
             return orderService.updateOrder(id, jsonObject);
@@ -45,7 +45,7 @@ public class OrderResource {
 
     @DELETE
     @Path("/{id}/delete")
-    //@RolesAllowed("Admin")
+    @RolesAllowed("admin")
     public Response deleteOrder(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
         Order order;
 

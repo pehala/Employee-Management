@@ -67,3 +67,12 @@ docker run --rm \
 
 ## Workday
  http POST :8080/workday/create date=2020-02-02 employee:='{"address": "Brno","dateOfBirth": "1990-01-01","hourlyWage": 5.0,"id": 1,"insuranceCompany": "Union","mobile": "0900000000","name": "Martin","startContract": "2020-11-01","surname": "Hrasko"}' order:='{"id": 3,"info": "Zasad mrkvu","mobile": "0910000000","name": "Jozef","state": "PENDING","surname": "Orac"}'
+
+```
+export access_token=$(\
+    curl --insecure -X POST https://localhost:8180/auth/realms/myrealms/protocol/openid-connect/token \
+    --user backend-service:secret \
+    -H 'content-type: application/x-www-form-urlencoded' \
+    -d 'username=myclient&password=martin&grant_type=password' | jq --raw-output '.access_token' \
+ )
+```

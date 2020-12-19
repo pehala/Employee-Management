@@ -12,6 +12,8 @@ public class Workday extends PanacheEntity {
     @Column(columnDefinition = "DATE")
     public LocalDate date;
 
+    public Double hours;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @NotNull(message = "Employee cannot be null")
     public Employee employee;

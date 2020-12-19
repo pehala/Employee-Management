@@ -6,15 +6,17 @@ import cz.fi.muni.pv217.employee.management.service.WorkdayService;
 import io.quarkus.panache.common.Parameters;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.List;
 
-@Path("/workday")
+@Path("/api/workday")
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,6 +27,7 @@ public class WorkdayResource {
 
     @POST
     @Path("/create")
+    @RolesAllowed({"admin","user"})
     @Counted(name = "createdWorkdays", description = "How many workdays have been created.")
     public Workday createWorkday(Workday workday) throws VacationException {
         return workdayService.createWorkday(workday);
@@ -32,13 +35,14 @@ public class WorkdayResource {
 
     @PUT
     @Path("/{id}/update")
+    @RolesAllowed({"admin","user"})
     public Workday updateWorkday(@org.jboss.resteasy.annotations.jaxrs.PathParam long id, Workday workday) {
         return workdayService.updateWorkday(id, workday);
     }
 
     @DELETE
     @Path("/{id}/delete")
-    //@RolesAllowed("Admin")
+    @RolesAllowed("admin")
     public Response deleteWorkday(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
         Workday workday;
 
@@ -62,12 +66,14 @@ public class WorkdayResource {
 
     @GET
     @Counted(name = "showWorkdays")
+    @RolesAllowed("user")
     public List<Workday> getWorkdays() {
         return Workday.listAll();
     }
 
     @GET
     @Path("/{id}")
+    @RolesAllowed("user")
     public Response getWorkday(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
         Workday workday = Workday.findById(id);
 
@@ -81,19 +87,19 @@ public class WorkdayResource {
         return Response.ok(workday).build();
     }
 
-    // I tried call it with command `http :8080/work/employee/1?from=2010-01-01&to=2013-03-03` and todate was null. I don't understand why. Can you help me?
+    // I tried call it with command `http :8080/api/workday/employee/1?from=2010-01-01&to=2013-03-03` and todate was null. I don't understand why. Can you help me?
     @GET
     @Path("/employee/{id}")
-    public List<Workday> getAllWorkdaysOfEmployeeInPeriod(@org.jboss.resteasy.annotations.jaxrs.PathParam long id, @QueryParam("from") String fromDate, @QueryParam("to") String toDate) {
-        System.out.println(fromDate);
-        System.out.println(toDate);
+    @RolesAllowed("user")
+    public List<Workday> getAllWorkdaysOfEmployeeFromDate(@org.jboss.resteasy.annotations.jaxrs.PathParam long id, @NotNull @QueryParam("from") String fromDate) {
 
         return  Workday.list("employee.id=:id AND date BETWEEN :from AND :to",
-                Parameters.with("id", id).and("from", LocalDate.parse(fromDate)).and("to", LocalDate.parse(toDate)));
+                Parameters.with("id", id).and("from", LocalDate.parse(fromDate)).and("to", LocalDate.now()));
     }
 
     @GET
     @Path("/order/{id}")
+    @RolesAllowed("user")
     public List<Workday> getAllWorkdaysForOrder(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
         return Workday.list("order.id", id);
     }
