@@ -37,7 +37,7 @@ public class Employee  extends PanacheEntity {
 
     @NotNull(message = "Start contract date cannot be null")
     public LocalDate startContract;
-    
+
     public LocalDate endContract;
 
     @NotNull(message = "Hourly wage cannot be null")

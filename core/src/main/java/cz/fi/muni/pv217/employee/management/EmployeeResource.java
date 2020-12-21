@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 
 @Path("/api/employee")
@@ -36,14 +37,14 @@ public class EmployeeResource {
     @PUT
     @Path("/{id}/update")
     @RolesAllowed("admin")
-    public Employee updateEmployee(@org.jboss.resteasy.annotations.jaxrs.PathParam long id, Employee employee) {
+    public Employee updateEmployee(@PathParam long id, Employee employee) {
         return employeeService.updateEmployee(id, employee);
     }
 
     @DELETE
     @Path("/{id}/delete")
     @RolesAllowed("admin")
-    public Response deleteEmployee(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
+    public Response deleteEmployee(@PathParam long id) {
         Employee employee;
 
         try {
@@ -73,7 +74,7 @@ public class EmployeeResource {
     @GET
     @Path("/{id}")
     @RolesAllowed("user")
-    public Response getEmployee(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
+    public Response getEmployee(@PathParam long id) {
         Employee employee = Employee.findById(id);
 
         if (employee == null) {

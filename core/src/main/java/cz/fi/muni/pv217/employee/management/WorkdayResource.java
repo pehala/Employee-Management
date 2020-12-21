@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.List;
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 @Path("/api/workday")
 @ApplicationScoped
@@ -36,14 +37,14 @@ public class WorkdayResource {
     @PUT
     @Path("/{id}/update")
     @RolesAllowed({"admin","user"})
-    public Workday updateWorkday(@org.jboss.resteasy.annotations.jaxrs.PathParam long id, Workday workday) {
+    public Workday updateWorkday(@PathParam long id, Workday workday) {
         return workdayService.updateWorkday(id, workday);
     }
 
     @DELETE
     @Path("/{id}/delete")
     @RolesAllowed("admin")
-    public Response deleteWorkday(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
+    public Response deleteWorkday(@PathParam long id) {
         Workday workday;
 
         try {
@@ -74,7 +75,7 @@ public class WorkdayResource {
     @GET
     @Path("/{id}")
     @RolesAllowed("user")
-    public Response getWorkday(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
+    public Response getWorkday(@PathParam long id) {
         Workday workday = Workday.findById(id);
 
         if (workday == null) {
@@ -91,7 +92,7 @@ public class WorkdayResource {
     @GET
     @Path("/employee/{id}")
     @RolesAllowed("user")
-    public List<Workday> getAllWorkdaysOfEmployeeFromDate(@org.jboss.resteasy.annotations.jaxrs.PathParam long id, @NotNull @QueryParam("from") String fromDate) {
+    public List<Workday> getAllWorkdaysOfEmployeeFromDate(@PathParam long id, @NotNull @QueryParam("from") String fromDate) {
 
         return  Workday.list("employee.id=:id AND date BETWEEN :from AND :to",
                 Parameters.with("id", id).and("from", LocalDate.parse(fromDate)).and("to", LocalDate.now()));
@@ -100,7 +101,7 @@ public class WorkdayResource {
     @GET
     @Path("/order/{id}")
     @RolesAllowed("user")
-    public List<Workday> getAllWorkdaysForOrder(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
+    public List<Workday> getAllWorkdaysForOrder(@PathParam long id) {
         return Workday.list("order.id", id);
     }
 }

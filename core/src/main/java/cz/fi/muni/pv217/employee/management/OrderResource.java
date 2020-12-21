@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 @Path("/api/order")
 @ApplicationScoped
@@ -32,7 +33,7 @@ public class OrderResource {
     @PUT
     @Path("/{id}/update")
     @RolesAllowed("admin")
-    public Order updateOrder(@org.jboss.resteasy.annotations.jaxrs.PathParam long id, JsonObject jsonObject) {
+    public Order updateOrder(@PathParam long id, JsonObject jsonObject) {
         try {
             return orderService.updateOrder(id, jsonObject);
         } catch (IllegalArgumentException iae) {
@@ -46,7 +47,7 @@ public class OrderResource {
     @DELETE
     @Path("/{id}/delete")
     @RolesAllowed("admin")
-    public Response deleteOrder(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
+    public Response deleteOrder(@PathParam long id) {
         Order order;
 
         try {
@@ -74,7 +75,7 @@ public class OrderResource {
 
     @GET
     @Path("/{id}")
-    public Response getOrder(@org.jboss.resteasy.annotations.jaxrs.PathParam long id) {
+    public Response getOrder(@PathParam long id) {
         Order order = Order.findById(id);
 
         if (order == null) {
