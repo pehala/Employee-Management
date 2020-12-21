@@ -67,14 +67,12 @@ public class WorkdayResource {
 
     @GET
     @Counted(name = "showWorkdays")
-    @RolesAllowed("user")
     public List<Workday> getWorkdays() {
         return Workday.listAll();
     }
 
     @GET
     @Path("/{id}")
-    @RolesAllowed("user")
     public Response getWorkday(@PathParam long id) {
         Workday workday = Workday.findById(id);
 
@@ -91,7 +89,6 @@ public class WorkdayResource {
     // I tried call it with command `http :8080/api/workday/employee/1?from=2010-01-01&to=2013-03-03` and todate was null. I don't understand why. Can you help me?
     @GET
     @Path("/employee/{id}")
-    @RolesAllowed("user")
     public List<Workday> getAllWorkdaysOfEmployeeFromDate(@PathParam long id, @NotNull @QueryParam("from") String fromDate) {
 
         return  Workday.list("employee.id=:id AND date BETWEEN :from AND :to",
@@ -100,7 +97,6 @@ public class WorkdayResource {
 
     @GET
     @Path("/order/{id}")
-    @RolesAllowed("user")
     public List<Workday> getAllWorkdaysForOrder(@PathParam long id) {
         return Workday.list("order.id", id);
     }

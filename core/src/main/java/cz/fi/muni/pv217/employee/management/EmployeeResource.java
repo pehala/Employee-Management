@@ -66,14 +66,14 @@ public class EmployeeResource {
     }
 
     @GET
-    @RolesAllowed({"user","admin"})
+    @RolesAllowed("admin")
     public List<Employee> getEmployees() {
         return Employee.listAll();
     }
 
     @GET
     @Path("/{id}")
-    @RolesAllowed("user")
+    @RolesAllowed("admin")
     public Response getEmployee(@PathParam long id) {
         Employee employee = Employee.findById(id);
 
@@ -89,8 +89,23 @@ public class EmployeeResource {
 
     @GET
     @Path("/search")
-    @RolesAllowed("user")
+    @RolesAllowed("admin")
     public List<Employee> searchEmployees(@QueryParam("search") String search) {
         return Employee.list("name like :search or surname like :search", Parameters.with("search", "%" + search + "%"));
+    }
+
+    @GET
+    @Path("/me")
+    public Response getMe() {
+        Employee employee = Employee.find("username", identity.getPrincipal().getName()).firstResult();
+
+        if (employee == null) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity(String.format("Employee for you not found."))
+                    .build();
+        }
+
+        return Response.ok(employee).build();
     }
 }
