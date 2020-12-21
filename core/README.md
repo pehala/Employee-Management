@@ -65,14 +65,12 @@ docker run --rm \
  docker run --rm --name prometheus -p 9090:9090  -v <path to project>/Employee-Management/core/src/main/resources/prometheus.yml:/etc/prometheus/prometheus.yml:Z prom/prometheus:v2.14.0 --config.file=/etc/prometheus/prometheus.yml
 ```
 
-## Workday
- http POST :8080/workday/create date=2020-02-02 employee:='{"address": "Brno","dateOfBirth": "1990-01-01","hourlyWage": 5.0,"id": 1,"insuranceCompany": "Union","mobile": "0900000000","name": "Martin","startContract": "2020-11-01","surname": "Hrasko"}' order:='{"id": 3,"info": "Zasad mrkvu","mobile": "0910000000","name": "Jozef","state": "PENDING","surname": "Orac"}'
-
+## Create token
 ```
 export access_token=$(\
-    curl --insecure -X POST https://localhost:8180/auth/realms/myrealms/protocol/openid-connect/token \
-    --user backend-service:secret \
+    curl --insecure -X POST http://localhost:8180/auth/realms/myrealm/protocol/openid-connect/token \
+    --user employee-management:710078a7-7db6-4268-9cfa-3b39f2630412 \
     -H 'content-type: application/x-www-form-urlencoded' \
-    -d 'username=myclient&password=martin&grant_type=password' | jq --raw-output '.access_token' \
+    -d 'username=adam&password=adam&grant_type=password' | jq --raw-output '.access_token' \
  )
 ```

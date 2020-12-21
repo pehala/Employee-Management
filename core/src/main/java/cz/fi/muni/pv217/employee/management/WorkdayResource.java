@@ -86,13 +86,14 @@ public class WorkdayResource {
         return Response.ok(workday).build();
     }
 
-    // I tried call it with command `http :8080/api/workday/employee/1?from=2010-01-01&to=2013-03-03` and todate was null. I don't understand why. Can you help me?
     @GET
-    @Path("/employee/{id}")
-    public List<Workday> getAllWorkdaysOfEmployeeFromDate(@PathParam long id, @NotNull @QueryParam("from") String fromDate) {
+    @Path("/employee/{id}/date")
+    public List<Workday> getAllWorkdaysOfEmployeeInRange(@PathParam long id, @QueryParam("from") String fromDate, @QueryParam("to") String toDate) {
+        LocalDate from = (fromDate == null) ? LocalDate.MIN : LocalDate.parse(fromDate);
+        LocalDate to = (toDate == null) ? LocalDate.now() : LocalDate.parse(toDate);
 
         return  Workday.list("employee.id=:id AND date BETWEEN :from AND :to",
-                Parameters.with("id", id).and("from", LocalDate.parse(fromDate)).and("to", LocalDate.now()));
+                Parameters.with("id", id).and("from", from).and("to", to));
     }
 
     @GET
