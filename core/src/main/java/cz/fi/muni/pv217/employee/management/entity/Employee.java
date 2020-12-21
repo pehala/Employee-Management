@@ -21,7 +21,6 @@ public class Employee  extends PanacheEntity {
     public String surname;
 
     @NotNull(message = "DateOfBirth cannot be null")
-    @Column(columnDefinition = "DATE")
     public LocalDate dateOfBirth;
 
     @NotNull(message = "Insurance Company cannot be null")
@@ -37,10 +36,8 @@ public class Employee  extends PanacheEntity {
     public String address;
 
     @NotNull(message = "Start contract date cannot be null")
-    @Column(columnDefinition = "DATE")
     public LocalDate startContract;
-
-    @Column(columnDefinition = "DATE")
+    
     public LocalDate endContract;
 
     @NotNull(message = "Hourly wage cannot be null")

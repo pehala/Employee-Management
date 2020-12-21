@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @Entity
 public class Workday extends PanacheEntity {
     @NotNull(message = "Date cannot be null")
-    @Column(columnDefinition = "DATE")
     public LocalDate date;
 
     public Double hours;
