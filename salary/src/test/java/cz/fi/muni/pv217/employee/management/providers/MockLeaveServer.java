@@ -37,22 +37,12 @@ public class MockLeaveServer implements QuarkusTestResourceLifecycleManager {
                                         "  {\n" +
                                         "    \"id\":1,\n" +
                                         "    \"date\":\"2018-01-03\",\n" +
-                                        "    \"employee\":{\n" +
-                                        "      \"id\":1,\n" +
-                                        "      \"hourlyWage\":5.00,\n" +
-                                        "      \"username\":\"user\"\n" +
-                                        "    },\n" +
                                         "    \"hours\": 7,\n" +
                                         "    \"paid\": true\n" +
                                         "  },\n" +
                                         "  {\n" +
                                         "    \"id\":2,\n" +
                                         "    \"date\":\"2018-01-25\",\n" +
-                                        "    \"employee\":{\n" +
-                                        "      \"id\":1,\n" +
-                                        "      \"hourlyWage\":5.00,\n" +
-                                        "      \"username\":\"user\"\n" +
-                                        "    },\n" +
                                         "    \"hours\":5,\n" +
                                         "    \"paid\": false\n" +
                                         "  }\n" +

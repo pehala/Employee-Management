@@ -37,21 +37,11 @@ public class MockCoreServer implements QuarkusTestResourceLifecycleManager {
                         "  {\n" +
                         "    \"id\":1,\n" +
                         "    \"date\":\"2018-01-01\",\n" +
-                        "    \"employee\":{\n" +
-                        "      \"id\":1,\n" +
-                        "      \"hourlyWage\":5.00,\n" +
-                        "      \"username\":\"user\"\n" +
-                        "    },\n" +
                         "    \"hours\":8.5\n" +
                         "  },\n" +
                         "  {\n" +
                         "    \"id\":2,\n" +
                         "    \"date\":\"2018-01-31\",\n" +
-                        "    \"employee\":{\n" +
-                        "      \"id\":1,\n" +
-                        "      \"hourlyWage\":5.00,\n" +
-                        "      \"username\":\"user\"\n" +
-                        "    },\n" +
                         "    \"hours\":5\n" +
                         "  }\n" +
                         "]"
