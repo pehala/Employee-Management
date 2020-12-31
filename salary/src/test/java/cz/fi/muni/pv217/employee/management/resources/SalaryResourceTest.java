@@ -1,16 +1,15 @@
 package cz.fi.muni.pv217.employee.management.resources;
 
 import cz.fi.muni.pv217.employee.management.SalaryResource;
-import cz.fi.muni.pv217.employee.management.entity.Salary;
 import cz.fi.muni.pv217.employee.management.providers.MockCoreServer;
 import cz.fi.muni.pv217.employee.management.providers.MockKeycloakTestResource;
 import cz.fi.muni.pv217.employee.management.providers.MockLeaveServer;
 import cz.fi.muni.pv217.employee.management.util.TestUtil;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.transaction.Transactional;
@@ -24,12 +23,15 @@ import static org.hamcrest.Matchers.is;
 @QuarkusTestResource(MockCoreServer.class)
 @QuarkusTestResource(MockLeaveServer.class)
 @QuarkusTestResource(MockKeycloakTestResource.class)
+@QuarkusTestResource(H2DatabaseTestResource.class)
 @TestHTTPEndpoint(SalaryResource.class)
 public class SalaryResourceTest {
 
-    @BeforeAll
+    @BeforeEach
     @Transactional
-    public static void init(){
+    public void init() {
+        TestUtil.USER_SALARY1.id = null;
+        TestUtil.USER_SALARY2.id = null;
         TestUtil.USER_SALARY1.persist();
         TestUtil.USER_SALARY2.persist();
     }
@@ -40,14 +42,14 @@ public class SalaryResourceTest {
                 .when()
                 .get()
                 .then()
-                    .statusCode(401);
+                .statusCode(401);
     }
 
     @Test
     void testListAdmin() {
         given()
                 .when().auth().oauth2(
-                        getAccessToken("non-existent", "admin"))
+                getAccessToken("non-existent", "admin"))
                 .get()
                 .then()
                 .statusCode(200)
@@ -58,7 +60,7 @@ public class SalaryResourceTest {
     void testListUser() {
         given()
                 .when().auth().oauth2(
-                        getAccessToken("non-existent", "user"))
+                getAccessToken("non-existent", "user"))
                 .get()
                 .then()
                 .statusCode(403);
@@ -68,7 +70,7 @@ public class SalaryResourceTest {
     void testGetNoSalaryUser() {
         given()
                 .when().auth().oauth2(
-                        getAccessToken("non-existent"))
+                getAccessToken("non-existent"))
                 .get("/1")
                 .then()
                 .statusCode(403);
@@ -78,7 +80,7 @@ public class SalaryResourceTest {
     void testGetUser() {
         given()
                 .when().auth().oauth2(
-                    getAccessToken("user"))
+                getAccessToken("user"))
                 .get("/1")
                 .then()
                 .statusCode(200)
@@ -89,7 +91,7 @@ public class SalaryResourceTest {
     void testGetAdmin() {
         given()
                 .when().auth().oauth2(
-                    getAccessToken("non-existent", "admin"))
+                getAccessToken("non-existent", "admin"))
                 .get("/1")
                 .then()
                 .statusCode(200)
@@ -100,7 +102,7 @@ public class SalaryResourceTest {
     void testGetEmployeeUser() {
         given()
                 .when().auth().oauth2(
-                    getAccessToken("user"))
+                getAccessToken("user"))
                 .get("/employee")
                 .then()
                 .statusCode(200)
@@ -111,7 +113,7 @@ public class SalaryResourceTest {
     void testGetEmployeeNonExistentUser() {
         given()
                 .when().auth().oauth2(
-                    getAccessToken("non-existent"))
+                getAccessToken("non-existent"))
                 .get("/employee")
                 .then()
                 .statusCode(200)
@@ -122,16 +124,14 @@ public class SalaryResourceTest {
     @Transactional
     void testCreateWithoutVacation() {
         // Do request and save it
-        Response response =
-                given()
+        given()
                 .when().auth().oauth2(
                 getAccessToken("non-existent", "admin"))
                 .contentType("application/json")
                 .queryParam("from", "2018-01-01")
                 .queryParam("to", "2018-01-31")
-                .post("/employee/1");
-        // Check the response
-        response.then()
+                .post("/employee/1")
+                .then()
                 .statusCode(200)
                 .body(
                         "salary", is(135.0F),
@@ -141,26 +141,20 @@ public class SalaryResourceTest {
                         "from_date", equalTo("2018-01-01"),
                         "to_date", equalTo("2018-01-31")
                 );
-
-        // Delete the created salary because transactions suck in integration tests
-        Long id = Long.valueOf((Integer) response.jsonPath().get("id"));
-        Salary.deleteById(id);
     }
 
     @Test
     @Transactional
     void testCreateWithVacation() {
         // Do request and save it
-        Response response =
-                given()
+        given()
                 .when().auth().oauth2(
                 getAccessToken("non-existent", "admin"))
                 .contentType("application/json")
                 .queryParam("from", "2018-01-01")
                 .queryParam("to", "2018-01-31")
-                .post("/employee/2");
-        // Check the response
-        response.then()
+                .post("/employee/2")
+                .then()
                 .statusCode(200)
                 .body(
                         "salary", is(205.0F),
@@ -170,10 +164,6 @@ public class SalaryResourceTest {
                         "from_date", equalTo("2018-01-01"),
                         "to_date", equalTo("2018-01-31")
                 );
-
-        // Delete the created salary because transactions suck in integration tests
-        Long id = Long.valueOf((Integer) response.jsonPath().get("id"));
-        Salary.deleteById(id);
     }
 
     @Test
