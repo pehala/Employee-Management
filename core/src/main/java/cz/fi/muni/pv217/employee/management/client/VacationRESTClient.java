@@ -2,16 +2,17 @@ package cz.fi.muni.pv217.employee.management.client;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.time.LocalDate;
 
+@Path("/api/vacation")
 @RegisterRestClient(configKey = "vacation-service")
+@ApplicationScoped
+@Produces(MediaType.APPLICATION_JSON)
 public interface VacationRESTClient {
 
-    @POST
-    @Path("/snap/create")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.TEXT_PLAIN)
-    boolean hasVacation(@QueryParam("id") Long id, @QueryParam("date") LocalDate date);
+    @GET
+    @Path("/employee/{id}/date")
+    boolean hasEmployeeVacationOnDate(@PathParam("id") long id, @QueryParam("date") String date);
 }

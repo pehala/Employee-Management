@@ -1,4 +1,4 @@
-INSERT INTO employee(id, username, name, surname, dateOfBirth, insuranceCompany, mobile, address, startContract, hourlyWage) VALUES (1, 'martin', 'Martin', 'Hrasko', '1990-01-01', 'Union', '0900000000', 'Brno', '2020-11-01', 5);
-INSERT INTO employee(id, username, name, surname, dateOfBirth, insuranceCompany, mobile, address, startContract, hourlyWage) VALUES (2, 'adam', 'Adam', 'Mrkva', '1990-02-02', 'Union', '0910000000', 'Brno', '2020-11-01', 5);
-INSERT INTO orders(id, name, surname, mobile, state, info) VALUES (1, 'Jozef', 'Orac', '0910000000', 'PENDING', 'Zasad mrkvu');
-INSERT INTO workday(id, date, employee_id, order_id, hours) VALUES (1, '2020-02-02', 1, 1, 8.5);
+-- INSERT INTO employee(id, username, name, surname, dateOfBirth, insuranceCompany, mobile, address, startContract, hourlyWage) VALUES (1, 'martin', 'Martin', 'Hrasko', '1990-01-01', 'Union', '0900000000', 'Brno', '2020-11-01', 5);
+-- INSERT INTO employee(id, username, name, surname, dateOfBirth, insuranceCompany, mobile, address, startContract, hourlyWage) VALUES (2, 'adam', 'Adam', 'Mrkva', '1990-02-02', 'Union', '0910000000', 'Brno', '2020-11-01', 5);
+-- INSERT INTO orders(id, name, surname, mobile, state, info) VALUES (1, 'Jozef', 'Orac', '0910000000', 'PENDING', 'Zasad mrkvu');
+-- INSERT INTO workday(id, date, employee_id, order_id, hours) VALUES (1, '2020-02-02', 1, 1, 8.5);

@@ -23,8 +23,15 @@ public class EmployeeService {
             return null;
         }
 
-        employee = changedEmployee;
-        employee.id = id;
+        employee.name = changedEmployee.name;
+        employee.surname = changedEmployee.surname;
+        employee.dateOfBirth = changedEmployee.dateOfBirth;
+        employee.insuranceCompany = changedEmployee.insuranceCompany;
+        employee.mobile = changedEmployee.mobile;
+        employee.address = changedEmployee.address;
+        employee.startContract = changedEmployee.startContract;
+        employee.endContract = changedEmployee.endContract;
+        employee.hourlyWage = changedEmployee.hourlyWage;
 
         employee.persist();
         return employee;

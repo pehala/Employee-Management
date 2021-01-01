@@ -29,4 +29,15 @@ public class Order extends PanacheEntity {
 
     @NotNull(message = "Info cannot be null")
     public String info;
+
+    public Order() {
+    }
+
+    public Order(String name, String surname, String mobile, OrderState state, String info) {
+        this.name = name;
+        this.surname = surname;
+        this.mobile = mobile;
+        this.state = state;
+        this.info = info;
+    }
 }

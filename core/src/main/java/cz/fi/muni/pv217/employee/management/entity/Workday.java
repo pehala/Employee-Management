@@ -13,11 +13,21 @@ public class Workday extends PanacheEntity {
 
     public Double hours;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = CascadeType.MERGE)
     @NotNull(message = "Employee cannot be null")
     public Employee employee;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = CascadeType.MERGE)
     @NotNull(message = "Order cannot be null")
     public Order order;
+
+    public Workday() {
+    }
+
+    public Workday(LocalDate date, Double hours, Employee employee, Order order) {
+        this.date = date;
+        this.hours = hours;
+        this.employee = employee;
+        this.order = order;
+    }
 }
