@@ -1,16 +1,15 @@
 package cz.fi.muni.pv217.employee.management.resources;
 
 import cz.fi.muni.pv217.employee.management.WorkdayResource;
-import cz.fi.muni.pv217.employee.management.entity.Workday;
 import cz.fi.muni.pv217.employee.management.providers.MockKeycloakTestResource;
 import cz.fi.muni.pv217.employee.management.providers.MockVacationServer;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.response.Response;
 import net.minidev.json.JSONObject;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.transaction.Transactional;
@@ -22,17 +21,21 @@ import static org.hamcrest.Matchers.is;
 @QuarkusTest
 @QuarkusTestResource(MockKeycloakTestResource.class)
 @QuarkusTestResource(MockVacationServer.class)
+@QuarkusTestResource(H2DatabaseTestResource.class)
 @TestHTTPEndpoint(WorkdayResource.class)
 public class WorkdayResourceTest {
 
-    @BeforeAll
+    @BeforeEach
     @Transactional
-    public static void init(){
-        EMPLOYEE.persist();
+    public void init(){
+        EMPLOYEE1.id = null;
+        ORDER.id = null;
+        WORKDAY1.id = null;
+        WORKDAY2.id = null;
+        EMPLOYEE1.persist();
         ORDER.persist();
         WORKDAY1.persist();
         WORKDAY2.persist();
-        createAnotherWorkday().persist();
     }
 
     @Test
@@ -64,24 +67,18 @@ public class WorkdayResourceTest {
         requestParams.put("employee", employee);
         requestParams.put("order", order);
 
-        // Do request and save it
-        Response response =
-                given()
-                        .when().auth().oauth2(
-                        getAccessToken("adam"))
-                        .contentType("application/json")
-                        .body(requestParams.toJSONString())
-                        .post("/create");
-        // Check the response
-        response.then()
+        given()
+                .when().auth().oauth2(
+                getAccessToken("adam"))
+                .contentType("application/json")
+                .body(requestParams.toJSONString())
+                .post("/create")
+                .then()
                 .statusCode(200)
                 .body(    "date", is("2020-12-28"),
                         "hours", is(8F),
                         "employee.id", is(1),
                         "order.id", is(2));
-        // Delete the created workday because transactions suck in integration tests
-        Long id = Long.valueOf((Integer) response.jsonPath().get("id"));
-        Workday.deleteById(id);
     }
 
     @Test
@@ -152,18 +149,15 @@ public class WorkdayResourceTest {
         requestParams.put("employee", employee);
         requestParams.put("order", order);
 
-        // Do request and save it
-        Response response =
-                given()
-                        .when().auth().oauth2(
-                        getAccessToken("adam"))
-                        .contentType("application/json")
-                        .body(
-                                requestParams.toJSONString()
-                        )
-                        .put("/4/update");
-        // Check the response
-        response.then()
+        given()
+                .when().auth().oauth2(
+                getAccessToken("adam"))
+                .contentType("application/json")
+                .body(
+                        requestParams.toJSONString()
+                )
+                .put("/3/update")
+                .then()
                 .statusCode(200)
                 .body(    "date", is("2020-12-28"),
                         "hours", is(8F),
@@ -217,7 +211,7 @@ public class WorkdayResourceTest {
                 .when().auth().oauth2(
                 getAccessToken("adam", "admin"))
                 .contentType("application/json")
-                .delete("/5/delete")
+                .delete("/3/delete")
                 .then()
                 .statusCode(200);
 
@@ -227,9 +221,7 @@ public class WorkdayResourceTest {
                 .get()
                 .then()
                 .statusCode(200)
-                .body("size()", Matchers.is(2));
-
-        createAnotherWorkday().persist();
+                .body("size()", Matchers.is(1));
     }
 
     @Test
@@ -251,17 +243,12 @@ public class WorkdayResourceTest {
                 .get()
                 .then()
                 .statusCode(200)
-                .body("size()", Matchers.is(3));
+                .body("size()", Matchers.is(2));
 
     }
 
     @Test
     void testGetWorkday() {
-        Response response = given().when().auth().oauth2(
-                getAccessToken("adam"))
-                .get();
-        response.prettyPrint();
-
         given()
                 .when().auth().oauth2(
                 getAccessToken("adam"))
@@ -278,11 +265,11 @@ public class WorkdayResourceTest {
                 .when().auth().oauth2(
                 getAccessToken("adam"))
                 .queryParam("from", "2020-12-20")
-                .queryParam("to", "2020-12-28")
+                .queryParam("to", "2020-12-27")
                 .get("/employee/1/date")
                 .then()
                 .statusCode(200)
-                .body("size()", Matchers.is(2));
+                .body("size()", Matchers.is(1));
     }
 
     @Test
@@ -295,7 +282,7 @@ public class WorkdayResourceTest {
                 .get("/employee/1/date")
                 .then()
                 .statusCode(200)
-                .body("size()", Matchers.is(3));
+                .body("size()", Matchers.is(2));
     }
 
     @Test
@@ -306,6 +293,6 @@ public class WorkdayResourceTest {
                 .get("/order/2")
                 .then()
                 .statusCode(200)
-                .body("size()", Matchers.is(3));
+                .body("size()", Matchers.is(2));
     }
 }

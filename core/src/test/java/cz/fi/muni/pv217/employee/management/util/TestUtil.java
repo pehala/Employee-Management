@@ -18,10 +18,11 @@ public class TestUtil {
      */
     public static final String HS256_SECRET = "B3KIh5W4Yl/8gN1xnAen0QOOFFLew2z36B1Dlxl2KmI=";
 
-    public static final Employee EMPLOYEE =  new Employee("martin", "Martin", "Hrasko", LocalDate.of(1990, 1,1), "Union", "0900000000", "Brno", LocalDate.of(2020,11,11), BigDecimal.valueOf(5));
+    public static final Employee EMPLOYEE1 =  new Employee("martin", "Martin", "Hrasko", LocalDate.of(1990, 1,1), "Union", "0900000000", "Brno", LocalDate.of(2020,11,11), BigDecimal.valueOf(5));
+    public static final Employee EMPLOYEE2 = new Employee("adam", "Adam", "Mrkva", LocalDate.of(1990, 2,2), "Union", "0910000000", "Brno", LocalDate.of(2020,11,11), BigDecimal.valueOf(5));
     public static final Order ORDER = new Order("Jozef", "Orac", "0910000000", OrderState.INPROGRESS, "Zasad mrkvu");
-    public static final Workday WORKDAY1 = new Workday(LocalDate.of(2020,12,28), 8.5, EMPLOYEE, ORDER);
-    public static final Workday WORKDAY2 = new Workday(LocalDate.of(2020,12,25), 8.5, EMPLOYEE, ORDER);
+    public static final Workday WORKDAY1 = new Workday(LocalDate.of(2020,12,28), 8.5, EMPLOYEE1, ORDER);
+    public static final Workday WORKDAY2 = new Workday(LocalDate.of(2020,12,25), 8.5, EMPLOYEE1, ORDER);
 
     public static Employee createAnotherEmployee() {
         return new Employee("adam", "Adam", "Mrkva", LocalDate.of(1990, 2,2), "Union", "0910000000", "Brno", LocalDate.of(2020,11,11), BigDecimal.valueOf(5));
@@ -32,7 +33,7 @@ public class TestUtil {
     }
 
     public static Workday createAnotherWorkday() {
-        return new Workday(LocalDate.of(2020,12,31), 6D, EMPLOYEE, ORDER);
+        return new Workday(LocalDate.of(2020,12,31), 6D, EMPLOYEE1, ORDER);
     }
 
 

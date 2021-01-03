@@ -1,15 +1,14 @@
 package cz.fi.muni.pv217.employee.management.resources;
 
 import cz.fi.muni.pv217.employee.management.EmployeeResource;
-import cz.fi.muni.pv217.employee.management.entity.Employee;
 import cz.fi.muni.pv217.employee.management.providers.MockKeycloakTestResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.response.Response;
 import net.minidev.json.JSONObject;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.transaction.Transactional;
@@ -21,14 +20,17 @@ import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
 @QuarkusTestResource(MockKeycloakTestResource.class)
+@QuarkusTestResource(H2DatabaseTestResource.class)
 @TestHTTPEndpoint(EmployeeResource.class)
 public class EmployeeResourceTest {
 
-    @BeforeAll
+    @BeforeEach
     @Transactional
-    public static void init(){
-        EMPLOYEE.persist();
-        createAnotherEmployee().persist();
+    public void init(){
+        EMPLOYEE1.id = null;
+        EMPLOYEE2.id = null;
+        EMPLOYEE1.persist();
+        EMPLOYEE2.persist();
     }
 
     @Test
@@ -120,31 +122,25 @@ public class EmployeeResourceTest {
         requestParams.put("startContract", "2019-01-01");
         requestParams.put("hourlyWage", "5");
 
-        // Do request and save it
-        Response response =
-            given()
-                .when().auth().oauth2(
-                    getAccessToken("martin", "admin"))
-                .contentType("application/json")
-                .body(
-                        requestParams.toJSONString()
-                )
-                .post("/create");
-        // Check the response
-        response.then()
-                .statusCode(200)
-                .body(    "username", is("igor"),
-                        "name", is("Igor"),
-                        "surname", is("Biely"),
-                        "dateOfBirth", equalTo("2000-01-01"),
-                        "insuranceCompany", is("Union"),
-                        "mobile", is("0902000000"),
-                        "address", is("Brno"),
-                        "startContract", equalTo("2019-01-01"),
-                        "hourlyWage", is(5));
-        // Delete the created employee because transactions suck in integration tests
-        Long id = Long.valueOf((Integer) response.jsonPath().get("id"));
-        Employee.deleteById(id);
+        given()
+            .when().auth().oauth2(
+                getAccessToken("martin", "admin"))
+            .contentType("application/json")
+            .body(
+                    requestParams.toJSONString()
+            )
+            .post("/create")
+            .then()
+            .statusCode(200)
+            .body(    "username", is("igor"),
+                    "name", is("Igor"),
+                    "surname", is("Biely"),
+                    "dateOfBirth", equalTo("2000-01-01"),
+                    "insuranceCompany", is("Union"),
+                    "mobile", is("0902000000"),
+                    "address", is("Brno"),
+                    "startContract", equalTo("2019-01-01"),
+                    "hourlyWage", is(5));
     }
 
     @Test
@@ -159,28 +155,25 @@ public class EmployeeResourceTest {
         requestParams.put("startContract", "2019-01-01");
         requestParams.put("hourlyWage", "6");
 
-        // Do request and save it
-        Response response =
-            given()
-                .when().auth().oauth2(
-                    getAccessToken("martin", "admin"))
-                .contentType("application/json")
-                .body(
-                        requestParams.toJSONString()
-                )
-                .put("/1/update");
-        // Check the response
-        response.then()
-                .statusCode(200)
-                .body(    "id", is(1),
-                        "username", is("martin"),
-                        "name", is("Igor"),
-                        "dateOfBirth", equalTo("2000-01-01"),
-                        "insuranceCompany", is("Union"),
-                        "mobile", is("0902000000"),
-                        "address", is("Brno"),
-                        "startContract", equalTo("2019-01-01"),
-                        "hourlyWage", is(6));
+        given()
+            .when().auth().oauth2(
+                getAccessToken("martin", "admin"))
+            .contentType("application/json")
+            .body(
+                    requestParams.toJSONString()
+            )
+            .put("/1/update")
+            .then()
+            .statusCode(200)
+            .body(    "id", is(1),
+                    "username", is("martin"),
+                    "name", is("Igor"),
+                    "dateOfBirth", equalTo("2000-01-01"),
+                    "insuranceCompany", is("Union"),
+                    "mobile", is("0902000000"),
+                    "address", is("Brno"),
+                    "startContract", equalTo("2019-01-01"),
+                    "hourlyWage", is(6));
     }
 
     @Test
@@ -201,11 +194,11 @@ public class EmployeeResourceTest {
                 .then()
                 .statusCode(200)
                 .body("size()", Matchers.is(1));
-        createAnotherEmployee().persist();
     }
 
     @Test
     void testGetEmployeesAdmin() {
+
         given()
                 .when().auth().oauth2(
                     getAccessToken("martin", "admin"))
