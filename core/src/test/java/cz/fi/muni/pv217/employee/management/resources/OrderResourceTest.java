@@ -69,15 +69,13 @@ public class OrderResourceTest {
 
     @Test
     void testGetOrdersUser() {
-        Response response =
         given()
                 .when().auth().oauth2(
                 getAccessToken("adam"))
-                .get();
-        response.prettyPrint();
-//                .then()
-//                .statusCode(200)
-//                .body("size()", Matchers.is(1));
+                .get()
+                .then()
+                .statusCode(200)
+                .body("size()", Matchers.is(1));
     }
 
     @Test

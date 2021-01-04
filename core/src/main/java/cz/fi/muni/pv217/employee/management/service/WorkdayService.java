@@ -1,6 +1,5 @@
 package cz.fi.muni.pv217.employee.management.service;
 
-import cz.fi.muni.pv217.employee.management.client.VacationRESTClient;
 import cz.fi.muni.pv217.employee.management.entity.Workday;
 import cz.fi.muni.pv217.employee.management.exception.VacationException;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -15,12 +14,12 @@ import java.time.format.DateTimeFormatter;
 public class WorkdayService {
     @Inject
     @RestClient
-    VacationRESTClient vacationRESTClient;
+    VacationService vacationService;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
     @Transactional
     public Workday createWorkday(Workday workday) throws VacationException {
-        boolean onVacation = vacationRESTClient.hasEmployeeVacationOnDate(workday.employee.id, workday.date.format(formatter));
+        boolean onVacation = vacationService.hasEmployeeVacationOnDate(workday.employee.id, workday.date.format(formatter));
         if (onVacation) {
             throw new VacationException(String.format("Employee %d on vacation!", workday.employee.id));
         }
@@ -36,7 +35,7 @@ public class WorkdayService {
             throw new NotFoundException("Cannot find workday for id " + id);
         }
 
-        boolean onVacation = vacationRESTClient.hasEmployeeVacationOnDate(workday.employee.id, changedWorkday.date.format(formatter));
+        boolean onVacation = vacationService.hasEmployeeVacationOnDate(workday.employee.id, changedWorkday.date.format(formatter));
         if (onVacation) {
             throw new VacationException(String.format("Employee %d on vacation!", workday.employee.id));
         }

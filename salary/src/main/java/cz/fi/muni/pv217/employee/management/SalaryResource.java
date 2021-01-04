@@ -6,10 +6,9 @@ import cz.fi.muni.pv217.employee.management.pojo.Employee;
 import cz.fi.muni.pv217.employee.management.pojo.Leave;
 import cz.fi.muni.pv217.employee.management.pojo.Workday;
 import cz.fi.muni.pv217.employee.management.service.CoreService;
-import cz.fi.muni.pv217.employee.management.service.LeaveService;
+import cz.fi.muni.pv217.employee.management.service.VacationService;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
-import net.bytebuddy.asm.Advice;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -54,7 +53,7 @@ public class SalaryResource {
 
     @Inject
     @RestClient
-    LeaveService leaveService;
+    VacationService vacationService;
 
     @Inject
     SecurityIdentity identity;
@@ -120,7 +119,7 @@ public class SalaryResource {
                 from.format(formatter),
                 to.format(formatter)
         );
-        List<Leave> leaves = leaveService.getLeaveInPeriod(
+        List<Leave> leaves = vacationService.getLeaveInPeriod(
                 id,
                 from.format(formatter),
                 to.format(formatter)

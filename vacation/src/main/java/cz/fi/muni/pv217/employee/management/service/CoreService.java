@@ -11,8 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/api")
-@RegisterRestClient(configKey="core-api")
-@ApplicationScoped
+@RegisterRestClient(configKey="core-service")
 @Produces(MediaType.APPLICATION_JSON)
 public interface CoreService {
 
