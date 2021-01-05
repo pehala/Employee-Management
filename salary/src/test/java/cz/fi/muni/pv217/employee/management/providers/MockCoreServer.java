@@ -47,7 +47,7 @@ public class MockCoreServer implements QuarkusTestResourceLifecycleManager {
                         "]"
                 )));
 
-        return Collections.singletonMap("core-api/mp-rest/url", wireMockServer.baseUrl());
+        return Collections.singletonMap("core-service/mp-rest/url", wireMockServer.baseUrl());
     }
 
     @Override

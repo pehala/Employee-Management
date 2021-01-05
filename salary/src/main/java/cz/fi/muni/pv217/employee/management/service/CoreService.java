@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/api")
-@RegisterRestClient(configKey="core-api")
+@RegisterRestClient(configKey="core-service")
 @Produces(MediaType.APPLICATION_JSON)
 public interface CoreService {
 
