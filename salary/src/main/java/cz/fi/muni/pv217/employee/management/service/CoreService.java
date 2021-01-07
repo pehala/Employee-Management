@@ -4,11 +4,13 @@ import cz.fi.muni.pv217.employee.management.pojo.Employee;
 import cz.fi.muni.pv217.employee.management.pojo.Workday;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/api")
+@ApplicationScoped
 @RegisterRestClient(configKey="core-service")
 @Produces(MediaType.APPLICATION_JSON)
 public interface CoreService {
