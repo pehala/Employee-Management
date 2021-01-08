@@ -12,7 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
+
 
 
 @Path("/api/employee")
@@ -37,14 +37,14 @@ public class EmployeeResource {
     @PUT
     @Path("/{id}/update")
     @RolesAllowed("admin")
-    public Employee updateEmployee(@PathParam long id, Employee employee) {
+    public Employee updateEmployee(@PathParam("id") long id, Employee employee) {
         return employeeService.updateEmployee(id, employee);
     }
 
     @DELETE
     @Path("/{id}/delete")
     @RolesAllowed("admin")
-    public Response deleteEmployee(@PathParam long id) {
+    public Response deleteEmployee(@PathParam("id") long id) {
         Employee employee;
 
         try {
@@ -74,7 +74,7 @@ public class EmployeeResource {
     @GET
     @Path("/{id}")
     @RolesAllowed("admin")
-    public Response getEmployee(@PathParam long id) {
+    public Response getEmployee(@PathParam("id") long id) {
         Employee employee = Employee.findById(id);
 
         if (employee == null) {
@@ -91,7 +91,7 @@ public class EmployeeResource {
     @Path("/search")
     @RolesAllowed("admin")
     public List<Employee> searchEmployees(@QueryParam("search") String search) {
-        return Employee.list("name like :search or surname like :search", Parameters.with("search", "%" + search + "%"));
+        return Employee.list("name like :search or surname like :search or username like :search", Parameters.with("search", "%" + search + "%"));
     }
 
     @GET
@@ -102,7 +102,7 @@ public class EmployeeResource {
         if (employee == null) {
             return Response
                     .status(Response.Status.NOT_FOUND)
-                    .entity(String.format("Employee for you not found."))
+                    .entity("Employee for you not found.")
                     .build();
         }
 

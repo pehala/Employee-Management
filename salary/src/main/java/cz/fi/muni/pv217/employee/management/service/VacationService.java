@@ -12,14 +12,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@RegisterRestClient(configKey="leave-api")
 @ApplicationScoped
-@Path("api/leave")
-@Produces(MediaType.APPLICATION_JSON)
-public interface LeaveService {
+@RegisterRestClient(configKey="vacation-service")
+public interface VacationService {
 
     @GET
-    @Path("/employee/{id}")
+    @Path("api/vacation/employee/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     List<Leave> getLeaveInPeriod(@PathParam("id") long id,
                                  @QueryParam("from") String fromDate,
                                  @QueryParam("to") String toDate);

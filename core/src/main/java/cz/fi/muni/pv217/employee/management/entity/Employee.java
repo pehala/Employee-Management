@@ -45,4 +45,20 @@ public class Employee  extends PanacheEntity {
 
     @NotNull(message = "Hourly wage cannot be null")
     public BigDecimal hourlyWage;
+
+    public Employee() {
+    }
+
+    public Employee(String username, String name, String surname, LocalDate dateOfBirth, String insuranceCompany,
+                    String mobile, String address, LocalDate startContract, BigDecimal hourlyWage) {
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.dateOfBirth = dateOfBirth;
+        this.insuranceCompany = insuranceCompany;
+        this.mobile = mobile;
+        this.address = address;
+        this.startContract = startContract;
+        this.hourlyWage = hourlyWage;
+    }
 }

@@ -24,12 +24,12 @@ public class MockLeaveServer implements QuarkusTestResourceLifecycleManager {
                 .dynamicPort());
         wireMockServer.start();
 
-        wireMockServer.stubFor(get(urlPathEqualTo("/api/leave/employee/1"))
+        wireMockServer.stubFor(get(urlPathEqualTo("/api/vacation/employee/1"))
                 .withQueryParam("from", equalTo("2018-01-01"))
                 .withQueryParam("to", equalTo("2018-01-31"))
                 .willReturn(okJson("[]")));
 
-        wireMockServer.stubFor(get(urlPathEqualTo("/api/leave/employee/2"))
+        wireMockServer.stubFor(get(urlPathEqualTo("/api/vacation/employee/2"))
                 .withQueryParam("from", equalTo("2018-01-01"))
                 .withQueryParam("to", equalTo("2018-01-31"))
                 .willReturn(okJson(
@@ -49,7 +49,7 @@ public class MockLeaveServer implements QuarkusTestResourceLifecycleManager {
                                         "]"
                         )));
 
-        return Collections.singletonMap("leave-api/mp-rest/url", wireMockServer.baseUrl());
+        return Collections.singletonMap("vacation-service/mp-rest/url", wireMockServer.baseUrl());
     }
 
     @Override

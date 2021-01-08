@@ -5,17 +5,16 @@ import cz.fi.muni.pv217.employee.management.exception.VacationException;
 import cz.fi.muni.pv217.employee.management.service.WorkdayService;
 import io.quarkus.panache.common.Parameters;
 import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.List;
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 @Path("/api/workday")
 @ApplicationScoped
@@ -28,23 +27,40 @@ public class WorkdayResource {
 
     @POST
     @Path("/create")
-    @RolesAllowed({"admin","user"})
     @Counted(name = "createdWorkdays", description = "How many workdays have been created.")
-    public Workday createWorkday(Workday workday) throws VacationException {
-        return workdayService.createWorkday(workday);
+    public Response createWorkday(Workday workday) {
+        try {
+            return Response.ok(workdayService.createWorkday(workday)).build();
+        } catch (VacationException ex) {
+            return Response
+                    .status(Response.Status.PRECONDITION_FAILED)
+                    .entity(ex.getMessage())
+                    .build();
+        }
     }
 
     @PUT
     @Path("/{id}/update")
-    @RolesAllowed({"admin","user"})
-    public Workday updateWorkday(@PathParam long id, Workday workday) {
-        return workdayService.updateWorkday(id, workday);
+    public Response updateWorkday(@PathParam("id") long id, Workday workday) {
+        try {
+            return Response.ok(workdayService.updateWorkday(id, workday)).build();
+        } catch (NotFoundException ex) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity(ex.getMessage())
+                    .build();
+        } catch (VacationException ex) {
+            return Response
+                    .status(Response.Status.PRECONDITION_FAILED)
+                    .entity(ex.getMessage())
+                    .build();
+        }
     }
 
     @DELETE
     @Path("/{id}/delete")
     @RolesAllowed("admin")
-    public Response deleteWorkday(@PathParam long id) {
+    public Response deleteWorkday(@PathParam("id") long id) {
         Workday workday;
 
         try {
@@ -73,7 +89,7 @@ public class WorkdayResource {
 
     @GET
     @Path("/{id}")
-    public Response getWorkday(@PathParam long id) {
+    public Response getWorkday(@PathParam("id") long id) {
         Workday workday = Workday.findById(id);
 
         if (workday == null) {
@@ -88,7 +104,7 @@ public class WorkdayResource {
 
     @GET
     @Path("/employee/{id}/date")
-    public List<Workday> getAllWorkdaysOfEmployeeInRange(@PathParam long id, @QueryParam("from") String fromDate, @QueryParam("to") String toDate) {
+    public List<Workday> getAllWorkdaysOfEmployeeInRange(@PathParam("id") long id, @QueryParam("from") String fromDate, @QueryParam("to") String toDate) {
         LocalDate from = (fromDate == null) ? LocalDate.MIN : LocalDate.parse(fromDate);
         LocalDate to = (toDate == null) ? LocalDate.now() : LocalDate.parse(toDate);
 
@@ -98,7 +114,7 @@ public class WorkdayResource {
 
     @GET
     @Path("/order/{id}")
-    public List<Workday> getAllWorkdaysForOrder(@PathParam long id) {
+    public List<Workday> getAllWorkdaysForOrder(@PathParam("id") long id) {
         return Workday.list("order.id", id);
     }
 }
