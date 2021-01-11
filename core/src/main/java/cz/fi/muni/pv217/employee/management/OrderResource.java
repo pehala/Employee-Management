@@ -12,9 +12,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+
+import io.quarkus.security.Authenticated;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 @Path("/api/order")
+@Authenticated
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

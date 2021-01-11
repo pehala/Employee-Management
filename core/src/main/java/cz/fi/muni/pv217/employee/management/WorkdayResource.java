@@ -4,6 +4,7 @@ import cz.fi.muni.pv217.employee.management.entity.Workday;
 import cz.fi.muni.pv217.employee.management.exception.VacationException;
 import cz.fi.muni.pv217.employee.management.service.WorkdayService;
 import io.quarkus.panache.common.Parameters;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Path("/api/workday")
+@Authenticated
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
