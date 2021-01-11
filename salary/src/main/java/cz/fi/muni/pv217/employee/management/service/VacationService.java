@@ -1,6 +1,7 @@
 package cz.fi.muni.pv217.employee.management.service;
 
 import cz.fi.muni.pv217.employee.management.pojo.Leave;
+import org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @ApplicationScoped
 @RegisterRestClient(configKey="vacation-service")
+@RegisterClientHeaders
 public interface VacationService {
 
     @GET
