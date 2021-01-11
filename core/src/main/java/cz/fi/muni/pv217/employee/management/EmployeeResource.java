@@ -3,6 +3,7 @@ package cz.fi.muni.pv217.employee.management;
 import cz.fi.muni.pv217.employee.management.entity.Employee;
 import cz.fi.muni.pv217.employee.management.service.EmployeeService;
 import io.quarkus.panache.common.Parameters;
+import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;
@@ -16,6 +17,7 @@ import java.util.List;
 
 
 @Path("/api/employee")
+@Authenticated
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
